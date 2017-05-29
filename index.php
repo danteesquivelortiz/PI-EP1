@@ -1,7 +1,3 @@
-<?php
-	include_once("controllers/ProductsController.php");
-	$products = new ProductController();
-?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -23,88 +19,98 @@
       <nav class="navbar navbar-inverse">
         <div class="container-fluid">
           <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Brand</a>
+            <a class="navbar-brand" href="index.php">Iniciar</a>
           </div>
-
-          <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="#">Link</a></li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">Separated link</a></li>
-                </ul>
-              </li>
-            </ul>
-          </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
+        </div>
       </nav>
     </header>
     <div class="video-container">
       <video class="video" src="./public/video.mp4" autoplay loop="">
       </video>
     </div>
-		<?php
-			$products->index();
-		?>
-    <!-- FORMULARIO PARA INGRESAR PRODUCTOS -->
-    <div class="video-container vertical-center">
-      <div class="front absolute card col-xs-12">
-        <h2 class ="white-text">Registrar nuevo producto</h2>
-        <input type="text" class="form-control" id="nombre" value="" placeholder="Escribe el nombre del producto "><br>
-        <input type="number" class="form-control" id="precio" value="" placeholder="Escribe el precio del producto "><br>
-        <select id="categoria" class="form-control" name="">
-					<option value="1">Pizzas</option>
-					<option value="2">Pastas</option>
-					<option value="3">Ensaladas</option>
-        	<option value="4">Bebidas</option>
-        </select><br>
-				<textarea class="form-control" id="descripcion"></textarea>
-				<br>
-
-        <button type="button" class="form-control" id="guardar">Guardar producto</button>
+		<div class="video-container vertical-center">
+			<div class="front absolute card col-xs-12">
+				<h2 class="white-text">Iniciar sesión</h2>
+				<h5 class="white-text">Introduzca los datos que se solicitan</h5>
+				<input type="text" class="form-control" id="nombre" value="" placeholder="Nombre de usuario:"><br>
+				<input type="text" class="form-control" id="direccion" value="" placeholder="Ingrese dirección"><br>
+				<button type="button" id="sesion" class="form-control btn-info">Login</button> <br>
+        <button type="button" class=" btn btn-info form-control" data-toggle="modal" data-target="#registro">Registrarme</button>
+			</div>
+		</div>
+    <div id="registro" class="modal fade col-sm-8"  role="dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <center><h4>Bienvenido al registro</h4></center>
+        </div>
+        <div class="modal-body">
+          <p>
+            Ingrese los datos correspondientes en el siguiente formulario y verifique los mismos.
+          </p>
+          <div class="form-group">
+            <label>Nombre:</label>
+            <input class="form-control" id="nombre2" type="text" placeholder="Ingrese nombre">
+          </div>
+          <div class="form-group">
+            <label>Dirección:</label>
+            <input class="form-control" id="direccion2" type="text" placeholder="Ingrese dirección">
+          </div>
+          <div class="form-group">
+            <label>Telefono</label>
+            <input class="form-control" id="telefono" type="number" maxlength="10">
+          </div>
+          <button type="button" id="registrar" class="btn btn-success">Registrar</button>
+          <button type="button" class="btn btn-danger btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>Cancelar</button>
+        </div>
       </div>
     </div>
-
-    <!-- container -->
-    <script src="./assets/js/script.js" charset="utf-8"></script>
-    <script type="text/javascript">
-      let guardar = document.querySelector("#guardar");
-      guardar.addEventListener('click',function(){
-        let nombre = document.querySelector("#nombre");
-        let precio = document.querySelector("#precio");
-				let categoria = document.querySelector("#categoria");
-        let descripcion = document.querySelector("#descripcion");
-
-
-
-        let producto = new Producto(nombre.value,precio.value,categoria.value,descripcion.value);
-				let listaproductos = new Array();
-				listaproductos.push(producto);
-				let arregloJSON = JSON.stringify(listaproductos);
-				console.log(arregloJSON);
-				$.ajax({
-				  method: "POST",
-				  url: "controllers/ProductsController.php",
-				  data: { productos: arregloJSON, funcion: "insertarProductos" }
-				})
-				.done(function() {
-				   console.log( "Datos guardados ");
-				 });
+		<script src="./assets/js/Client.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			let btn = document.querySelector("#sesion");
+			btn.addEventListener('click',function(){
+				let nom = document.querySelector("#nombre");
+				let direccion = document.querySelector("#direccion");
+				if(nom.value=="" || direccion.value==""){
+          alert("Ingrese todos los datos");
+        }else{
+          $.ajax({
+  					method: "POST",
+  					url: "controllers/ClientsController.php",
+  					data: { nombre: nom.value, dir: direccion.value, funcion: "verificarUsuario" }
+  				})
+          .done(function(respuesta){
+            if(respuesta.id>0){
+              location.href="views/menu.php?id="+respuesta.id;
+            }else{
+              alert("Datos incorrectos");
+            }
+          });
+        }
+			});
+      let registro = document.querySelector("#registrar");
+      registro.addEventListener('click',function(){
+        let nombre = document.getElementById('nombre2')
+        let dir = document.getElementById('direccion2')
+        let tel = document.getElementById('telefono')
+        if(nombre.value=="" || dir.value=="" || tel.value==""){
+          alert("LLene todos los campos");
+        }else{
+          let cliente = new Client(0,nombre.value,dir.value,tel.value);
+          let lista = new Array();
+          lista.push(cliente);
+          let datos = JSON.stringify(lista);
+          $.ajax({
+            method: "POST",
+            url: "controllers/ClientsController.php",
+            data: { clientes: datos, funcion: "insertarCliente" }
+          })
+          .done(function() {
+              alert("Cliente añadido exitosamente");
+              $('#registro').modal('hide');
+           });
+        }
       });
-
-    </script>
+		</script>
   </body>
 </html>

@@ -9,7 +9,7 @@
 		{
 			$this->host       =		"localhost";
 			$this->username   =		"root";
-			$this->password   =		'';
+			$this->password   =		'1234';
 			$this->database 	=		"pizzeria";
 			$this->mysqli     =		null;
 		}
@@ -27,7 +27,7 @@
 			return true;
 
 		}
-		
+
 		function query($sql) {
 			$this->connect();
 			if (!$query =$this->mysqli->query($sql)) {

@@ -1,10 +1,20 @@
 class  Producto{
-  constructor(nombre,precio,categoria,descripcion){
+  constructor(id,nombre,precio,categoria,descripcion){
+    this._id=id;
     this._nombre=nombre;
     this._precio = precio;
     this._categoria = categoria;
     this._descripcion = descripcion;
   }
+
+  get id(){
+    return this._id;
+  }
+
+  set id(id){
+    this._id=id;
+  }
+
   get nombre(){
     return this._nombre;
   }
@@ -23,6 +33,7 @@ class  Producto{
   set categoria(categoria){
     this._categoria=categoria;
   }
+
   get descripcion(){
     return this._descripcion;
   }
